@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react";
 import { categories } from "@/data/categories";
 
 const CategorySidebar = () => {
-  const [hovered, setHovered] = useState<string | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <div className="relative">
@@ -13,11 +13,12 @@ const CategorySidebar = () => {
           Categories
         </h3>
         <ul>
-          {categories.map((cat) => (
+          {categories.map((cat, index) => (
             <li
               key={cat.name}
-              onMouseEnter={() => setHovered(cat.name)}
-              onMouseLeave={() => setHovered(null)}
+              className="relative"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
               <Link
                 to={`/products?category=${encodeURIComponent(cat.name)}`}
@@ -28,34 +29,32 @@ const CategorySidebar = () => {
                 </span>
                 <ChevronRight className="w-4 h-4 text-muted-foreground" />
               </Link>
+
+              {/* Mega dropdown - positioned relative to hovered item */}
+              {hoveredIndex === index && (
+                <div
+                  className="absolute left-full top-0 ml-1 w-64 bg-card border border-border rounded-lg shadow-xl p-4 z-50 animate-fade-in"
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                >
+                  <h4 className="font-semibold text-foreground mb-3">{cat.name}</h4>
+                  <div className="space-y-1">
+                    {cat.subcategories.map((sub) => (
+                      <Link
+                        key={sub}
+                        to={`/products?category=${encodeURIComponent(cat.name)}&sub=${encodeURIComponent(sub)}`}
+                        className="block text-sm text-muted-foreground hover:text-primary py-1.5 transition-colors"
+                      >
+                        {sub}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </li>
           ))}
         </ul>
       </div>
-
-      {/* Mega dropdown */}
-      {hovered && (
-        <div
-          className="absolute left-full top-0 ml-1 w-64 bg-card border border-border rounded-lg shadow-xl p-4 z-10 animate-fade-in"
-          onMouseEnter={() => setHovered(hovered)}
-          onMouseLeave={() => setHovered(null)}
-        >
-          <h4 className="font-semibold text-foreground mb-3">{hovered}</h4>
-          <div className="space-y-1">
-            {categories
-              .find((c) => c.name === hovered)
-              ?.subcategories.map((sub) => (
-                <Link
-                  key={sub}
-                  to={`/products?category=${encodeURIComponent(hovered)}&sub=${encodeURIComponent(sub)}`}
-                  className="block text-sm text-muted-foreground hover:text-primary py-1.5 transition-colors"
-                >
-                  {sub}
-                </Link>
-              ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
