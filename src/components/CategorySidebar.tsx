@@ -7,9 +7,9 @@ const CategorySidebar = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div className="relative">
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <h3 className="gradient-primary text-primary-foreground text-sm font-semibold px-4 py-3">
+    <div className="relative z-20">
+      <div className="bg-card border border-border rounded-lg">
+        <h3 className="gradient-primary text-primary-foreground text-sm font-semibold px-4 py-3 rounded-t-lg">
           Categories
         </h3>
         <ul>
@@ -22,7 +22,7 @@ const CategorySidebar = () => {
             >
               <Link
                 to={`/products?category=${encodeURIComponent(cat.name)}`}
-                className="flex items-center justify-between px-4 py-2.5 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                className={`flex items-center justify-between px-4 py-2.5 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors ${index === categories.length - 1 ? "rounded-b-lg" : ""}`}
               >
                 <span>
                   {cat.icon} {cat.name}
